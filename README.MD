@@ -1,19 +1,18 @@
 <p align="center">
-  <img src="https://raw.githubusercontent.com/mleitejunior/lanches-rest-api-spring/master/readme_resources/logo.png" title="Lanches logo" alt="Lanches Rest API">
+  <img src="https://raw.githubusercontent.com/mleitejunior/spring-customer-address-mysql/master/readme_resources/logo.png" title="Spring logo" alt="Spring Rest API">
 </p>
 
-<p align="center"><b>Rest API</b> de gestão de lanches<br>
+<p align="center"><b>Customer/Addresss Rest API</b><br>
 
-A Lanches API Rest tem o intuito de gerir a venda de lanches, possibilitando o registro de ingredientes e a criação de lanches personalizados, assim como calcular o valor do lanche e aplicando descontos promocionais para lanches com ingredientes específicos.
+Esta API Rest tem o intuito de gerir Clientes e Endereços
 
 ## Techs
 - Java 8
-- Spring Boot 2.3.4
+- Spring Boot 2.5.6
 - Spring Security
-- PostgreSQL
+- MySQL
 - Hibernate
 - Spring Data JPA
-- Lombok
 - JWT Authentication
 - Maven
 
@@ -63,7 +62,7 @@ Algumas requisições precisam de autenticação no sistema para funcionar, util
 
 ## Database Schema
 
-![](https://raw.githubusercontent.com/mleitejunior/lanches-rest-api-spring/master/readme_resources/mer.png)
+![](https://raw.githubusercontent.com/mleitejunior/spring-customer-address-mysql/master/readme_resources/mer.png)
 
 Caso não utilizou o docker ja citado, você pode baixar o arquivo `.sql` de [exemplo de banco já populado AQUI!](https://raw.githubusercontent.com/mleitejunior/lanches-rest-api-spring/master/readme_resources/dump-lanches.sql)
 
