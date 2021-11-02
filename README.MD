@@ -100,6 +100,9 @@ Ainda implementada de forma simples, existem algumas regras de negócio implemen
 **Testes:**
 Os testes unitários até o momento não estão cobrindo todo o código, está sendo implementado especialmente para os métodos que possuam regras de negócio, necessitando de multiplas validações.
 
+**Swagger:**
+A documentação ainda não está configurada para fazer a autenticação dos métodos. WIP (Work in Progress).
+
 **Implementação do resto de um sistema:**
 Por se tratar de um teste, não há muitas regras e um intuito específico para tal API existir. Seria interessante pensar em um caso real para "fechar o projeto".
 
