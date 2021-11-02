@@ -1,8 +1,5 @@
-<p align="center">
-  <img src="https://raw.githubusercontent.com/mleitejunior/spring-customer-address-mysql/master/readme_resources/logo.png" title="Spring logo" alt="Spring Rest API">
-</p>
-
-<p align="center"><b>Customer/Addresss Rest API</b><br>
+<img src="https://raw.githubusercontent.com/mleitejunior/spring-customer-address-mysql/master/readme_resources/logo.png" title="Spring logo" alt="Spring Rest API">
+<b>Customer/Addresss Rest API</b>
 
 Esta API Rest tem o intuito de gerir Clientes e Endereços
 

@@ -6,7 +6,6 @@ import com.mleitejunior.springcustomeraddressmysql.repository.AddressRepository;
 import com.mleitejunior.springcustomeraddressmysql.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -18,18 +17,21 @@ import java.util.Optional;
 @Service
 public class AddressService {
 
-    @Autowired
-    private AddressRepository addressRepository;
+    private final AddressRepository addressRepository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
-    private CustomerRepository customerRepository;
+    public AddressService(AddressRepository addressRepository, CustomerRepository customerRepository) {
+        this.addressRepository = addressRepository;
+        this.customerRepository = customerRepository;
+    }
 
-    public Address saveAddressOfCustomer(Address address, Integer customer_id) {
-        if (Objects.isNull(customer_id)) {
+    public Address saveAddressOfCustomer(Address address, Integer customerId) {
+        if (Objects.isNull(customerId)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Address needs a Customer");
         }
 
-        Optional<Customer> customerById = customerRepository.findById(customer_id);
+        Optional<Customer> customerById = customerRepository.findById(customerId);
 
         if (!customerById.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found");
@@ -47,8 +49,8 @@ public class AddressService {
         return addressRepository.findById(id).orElse(null);
     }
 
-    public List<Address> getAddressesByCustomerId(Integer customer_id) {
-        Optional<Customer> customerById = customerRepository.findById(customer_id);
+    public List<Address> getAddressesByCustomerId(Integer customerId) {
+        Optional<Customer> customerById = customerRepository.findById(customerId);
 
         if (!customerById.isPresent()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found");
@@ -59,9 +61,10 @@ public class AddressService {
     }
 
 
-    public Address updateAddress(Address address) {
-        Optional<Address> addressRepositoryById = addressRepository.findById(address.getIdAddress());
+    public Address updateAddress(Address address, Integer addressId) {
+        Optional<Address> addressRepositoryById = addressRepository.findById(addressId);
         if (addressRepositoryById.isPresent()) {
+            address.setIdAddress(addressId);
             address.setCustomer(addressRepositoryById.get().getCustomer());
             return addressRepository.save(address);
         }
@@ -69,10 +72,15 @@ public class AddressService {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found");
     }
 
-    public String deleteAddress(int id) {
-        addressRepository.deleteById(id);
+    public String deleteAddress(Integer id) {
+        Optional<Address> addressRepositoryById = addressRepository.findById(id);
+        if (addressRepositoryById.isPresent()) {
+            addressRepository.deleteById(id);
 
-        return "Address removed : " + id;
+            return "Address removed : " + id;
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Address not found");
     }
 
 }

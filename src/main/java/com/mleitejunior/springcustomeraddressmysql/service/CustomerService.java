@@ -8,43 +8,50 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Objects;
 
 @Service
 public class CustomerService {
 
-    private CustomerRepository repository;
+    private final CustomerRepository customerRepository;
 
     @Autowired
     public CustomerService(CustomerRepository repository) {
-        this.repository = repository;
+        this.customerRepository = repository;
     }
 
     public Customer saveCustomer(Customer customer) {
-        if (repository.findByEmail(customer.getEmail()) != null) {
+        if (customerRepository.findByEmail(customer.getEmail()) != null) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already taken");
         }
 
-        return repository.save(customer);
+        return customerRepository.save(customer);
     }
 
     public List<Customer> getCustomers() {
-        return repository.findAll();
+        return customerRepository.findAll();
     }
 
     public Customer getCustomerById(int id) {
-        return repository.findById(id).orElse(null);
+        return customerRepository.findById(id).orElse(null);
     }
 
 
-    public Customer updateCustomer(Customer customer) {
-        if (repository.findById(customer.getIdCustomer()).isPresent()) {
-            return repository.save(customer);
+    public Customer updateCustomer(Customer customer, Integer id) {
+        if (customerRepository.findById(id).isPresent()) {
+            Customer customerRepositoryByEmail = customerRepository.findByEmail(customer.getEmail());
+            if (Objects.nonNull(customerRepositoryByEmail) && customerRepositoryByEmail.getIdCustomer() != id) {
+                throw new ResponseStatusException(HttpStatus.CONFLICT, "Email already in use");
+            }
+
+            customer.setIdCustomer(id);
+            return customerRepository.save(customer);
         }
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Customer not found");
     }
 
     public String deleteCustomer(int id) {
-        repository.deleteById(id);
+        customerRepository.deleteById(id);
 
         return "Customer removed : " + id;
     }

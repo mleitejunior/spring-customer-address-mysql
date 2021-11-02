@@ -4,6 +4,8 @@ import com.mleitejunior.springcustomeraddressmysql.config.jwt.JwtRequest;
 import com.mleitejunior.springcustomeraddressmysql.config.jwt.JwtResponse;
 import com.mleitejunior.springcustomeraddressmysql.config.jwt.JwtTokenUtil;
 import com.mleitejunior.springcustomeraddressmysql.service.JwtUserDetailsService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @CrossOrigin
+@Api(tags = "Authentication")
 public class JwtAuthenticationController {
 
     @Autowired
@@ -26,6 +29,7 @@ public class JwtAuthenticationController {
     @Autowired
     private JwtUserDetailsService userDetailsService;
 
+    @ApiOperation(value = "Get Bearer Token using Credencials")
     @PostMapping(value = "/authenticate")
     public ResponseEntity<JwtResponse> createAuthenticationToken(@RequestBody JwtRequest authenticationRequest) {
 

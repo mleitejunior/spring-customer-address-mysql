@@ -1,52 +1,57 @@
 package com.mleitejunior.springcustomeraddressmysql.service;
 
 import com.mleitejunior.springcustomeraddressmysql.entity.Address;
-import com.mleitejunior.springcustomeraddressmysql.entity.Customer;
+import com.mleitejunior.springcustomeraddressmysql.repository.AddressRepository;
+import com.mleitejunior.springcustomeraddressmysql.repository.CustomerRepository;
 import org.junit.Assert;
-import org.junit.Rule;
 import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
 import org.mockito.*;
-import org.mockito.junit.MockitoJUnit;
-import org.mockito.junit.MockitoRule;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class AddressServiceTest {
 
     @Autowired
-    private AddressService service;
+    private AddressService addressService;
 
-    @Rule
-    public MockitoRule rule = MockitoJUnit.rule();
+    @Mock
+    private AddressRepository addressRepository;
+
+    @Mock
+    private CustomerRepository customerRepository;
 
     @Captor
     private ArgumentCaptor<Address> captor;
 
-    public AddressServiceTest() {
+    @BeforeEach
+    public void beforeEach() {
+        MockitoAnnotations.initMocks(this);
+        addressService = new AddressService(addressRepository, customerRepository);
     }
 
     @Test
     public void shouldCreateAddress() {
-//        Address address = mockNewValidAddress();
-//
-//        service.saveAddress(address);
-//
-//        Mockito.verify(service).saveAddress(captor.capture());
-//
-//        Address addressToCheck = captor.getValue();
-//
-//        Assert.assertNotNull(addressToCheck.getZipcode());
-//        Assert.assertNotNull(addressToCheck.getStreet());
-//        Assert.assertNotNull(addressToCheck.getNumber());
-//        Assert.assertNotNull(addressToCheck.getCity());
-//        Assert.assertNotNull(addressToCheck.getState());
-//        Assert.assertNotNull(addressToCheck.getCountry());
-//        Assert.assertNotNull(addressToCheck.getCustomer());
+        Address address = mockNewValidAddress();
+
+        addressService.saveAddressOfCustomer(address, 1);
+
+        Mockito.verify(addressService).saveAddressOfCustomer(captor.capture(), 1);
+
+        Address addressToCheck = captor.getValue();
+
+        Assert.assertNotNull(addressToCheck.getZipcode());
+        Assert.assertNotNull(addressToCheck.getStreet());
+        Assert.assertNotNull(addressToCheck.getNumber());
+        Assert.assertNotNull(addressToCheck.getCity());
+        Assert.assertNotNull(addressToCheck.getState());
+        Assert.assertNotNull(addressToCheck.getCountry());
+        Assert.assertNotNull(addressToCheck.getCustomer());
     }
 
 
     private Address mockNewValidAddress(){
         return new Address(
-                new Integer(1),
+                1,
                 "37754-106",
                 "Rua Paulo Henrique de Oliveira",
                 "no. 70",
@@ -55,14 +60,7 @@ public class AddressServiceTest {
                 "Pouso Alegre",
                 "Minas Gerais",
                 "Brazil",
-                new Customer(
-                        new Integer (1),
-                        null,
-                        null,
-                        null,
-                        null,
-                        null
-                )
+                null
         );
     }
 }

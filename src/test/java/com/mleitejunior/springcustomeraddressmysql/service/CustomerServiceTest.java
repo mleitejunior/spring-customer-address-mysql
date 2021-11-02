@@ -39,16 +39,14 @@ public class CustomerServiceTest {
     }
 
     private Customer mockNewValidCustomer(){
-        Customer customer = new Customer(
-                        new Integer (1),
+        return new Customer(
+                        1,
                         "Marcelo Leite Junior",
                         "mleitejunior@gmail.com",
                         "012.345.678-9",
                         LocalDate.of(1988, 3, 4),
                         "(35) 99100-6198"
         );
-
-        return customer;
     }
 
 }

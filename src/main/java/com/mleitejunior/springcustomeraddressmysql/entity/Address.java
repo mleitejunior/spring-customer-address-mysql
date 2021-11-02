@@ -1,7 +1,6 @@
 package com.mleitejunior.springcustomeraddressmysql.entity;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "address")
