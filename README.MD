@@ -45,7 +45,7 @@ Rode a classe principal do projeto (`SpringCustomerAddressMysqlApplication`) em 
 
 Você poderá acessar os métodos através do Swagger-ui (WIP) ou via Postman:
 
-![](https://raw.githubusercontent.com/mleitejunior/spring-customer-address-mysql/master/readme_resources/postman_print.png)
+![](https://github.com/mleitejunior/spring-customer-address-mysql/raw/main/readme_resources/postman_print.png)
 
 Lembrando que as portas podem variar, a do docker está configurada assim:
 
