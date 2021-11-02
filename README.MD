@@ -11,9 +11,36 @@ Esta API Rest tem o intuito de gerir Clientes e Endereços
 - Hibernate
 - Spring Data JPA
 - JWT Authentication
+- JUnit
+- Mockito
 - Maven
 
 ## Como rodar o projeto?
+
+### Via Docker
+
+Após baixar o projeto, em sua pasta raíz, execute o comando `docker-compose up` 
+
+O comando irá automaticamente montar o banco de dados MySQL e rodar o projeto.
+
+
+### Manualmente:
+
+Você precisa de um banco MySQL em sua máquina com as configurações e nome do Schema de acordo com o encontrado no `application.properties` do projeto:
+
+```
+spring.datasource.url=jdbc:mysql://localhost:3306/mydatabasetest?useSSL=false
+spring.datasource.username=user
+spring.datasource.password=password
+```
+
+Tendo o banco funcionando, rode a classe principal do projeto (`SpringCustomerAddressMysqlApplication`) em sua IDE.
+
+## Manipulando os Customers / Addresses
+
+Você poderá acessar os métodos através do Swagger-ui (WIP) ou via Postman:
+
+LINK: [JSON da Collection do Postman já configurado!]()
 
 ### Banco de dados:
 
