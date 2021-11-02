@@ -34,41 +34,19 @@ spring.datasource.username=user
 spring.datasource.password=password
 ```
 
-Tendo o banco funcionando, rode a classe principal do projeto (`SpringCustomerAddressMysqlApplication`) em sua IDE.
+Tendo o banco funcionando, baixe o projeto para seu computador através do ZIP ou do comando:
+
+`git clone https://github.com/mleitejunior/lanches-rest-api-spring`
+
+
+Rode a classe principal do projeto (`SpringCustomerAddressMysqlApplication`) em sua IDE.
 
 ## Manipulando os Customers / Addresses
 
 Você poderá acessar os métodos através do Swagger-ui (WIP) ou via Postman:
 
-LINK: [JSON da Collection do Postman já configurado!]()
+LINK: [JSON da Collection do Postman já configurado!](https://raw.githubusercontent.com/mleitejunior/spring-customer-address-mysql/main/readme_resources/mydatabasetest.postman_collection.json)
 
-### Banco de dados:
-
-O projeto no momento está configurado com PostgreSQL, será necessário um banco com o nome `lanches`.
-
-**Manualmente**
-
-As configurações podem ser modificadas no `src/main/resources/application.properties`:
-
-```
-spring.datasource.url = jdbc:postgresql://localhost:5432/lanches
-spring.datasource.username = postgres
-spring.datasource.password = password
-```
-
-Troque o `localhost` e a porta `5432` para as equivalentes ao seu banco (assim como as credenciais `username` e `password`) antes de iniciar o projeto.
-
-### Montando o projeto:
-
-Baixe o projeto para seu computador através do ZIP ou do comando:
-
-`git clone https://github.com/mleitejunior/lanches-rest-api-spring`
-
-Na pasta do projeto execute `maven clean install` para montar o projeto baixando os arquivos necessários. Se as configurações do banco estiverem corretas, após os testes você receberá `BUILD SUCCESS`.
-
-### Rodando o projeto:
-
-Ainda na pasta do projeto, execute o comando `mvn spring-boot:run`.
 
 ### Autenticando:
 
@@ -76,102 +54,51 @@ Algumas requisições precisam de autenticação no sistema para funcionar, util
 
 ```
 {
-	"username": "employee",
-	"password": "password"
+    "username" : "myusername",
+    "password" : "password"
 }
 ```
 
-**Salve o bearer token** de resposta e o utilize para as requisições que somente os funcionários poderão executar.
-
+**Salve o bearer token** de resposta e o utilize para as outras requisições (o arquivo do Postman já citado possui tudo isto configurado).
 
 ## Database Schema
 
 ![](https://raw.githubusercontent.com/mleitejunior/spring-customer-address-mysql/master/readme_resources/mer.png)
 
-Caso não utilizou o docker ja citado, você pode baixar o arquivo `.sql` de [exemplo de banco já populado AQUI!](https://raw.githubusercontent.com/mleitejunior/lanches-rest-api-spring/master/readme_resources/dump-lanches.sql)
+LINK: [Código de criação do banco MYSQL!](https://github.com/mleitejunior/spring-customer-address-mysql/edit/main/readme_resources/database-script.sql)
 
 *Entidades:*
-- ingredient (ingredientes dos lanches com seu valor por custo)
-- sandwich (o lanche em si)
-- order (representa o pedido de um lanche em específico)
-- order_item (o ingrediente do lanche específico)
+- customer (clientes)
+- address (endereços)
 
-ps: O atributo **ingredient_price** em `order_item` existe para manter registrado o valor atual do ingrediente no momento do pedido. Caso contrário não seria necessário por já existir o **price_per_item** em `ingredient`.
-
-*Tabela de relacionamento:*
-- sandwich_recipe_has_ingredient (armazena quais ingredientes fazem parte de uma receita)
+O atributo **customer_id_customer** em `address` existe para como relação "muitos para um", onde cada cliente pode possuir muitos endereços.
 
 ## Requisições e Regras de Negócios
 
-**INSERINDO NOVO SANDUICHE:**
+Ainda implementada de forma simples, existem algumas regras de negócio implementadas no projeto:
 
-O exemplo do banco já populado foi adicionado pelo POST `/sandwich` da seguinte forma:
-```
-[
-	{
-  "name": "x-burguer",
-  "ingredients": [
-		{
-			"id": 3
-		},
-		{
-			"id": 5
-		}
-  ]
-  }
-]
-```
-Onde `3` é o ID do hambúrguer no banco e `5` é ID do queijo.
+**Address**
 
+- Add Address: Necessita receber o ID de um Customer válido para ser criada.
+- Find Addresses by Customer ID: Pega lista de endereços de um cliente, via o ID válido deste ultimo.
 
-**FAZENDO O PEDIDO UTILIZANDO O SANDUÍCHE:**
+**Customer**
 
-É possível pedir um sanduiche direto pelo id de sua receita, gerando os `ordem_item` diretamente através de um POST `/order`:
-```
-{
-	"sandwich": { "id": 1 }
-}
-```
-
-Onde `1` seria o id de um x-bacon por exemplo.
-
-
-**PROMOÇÕES:**
-
-A classe `src/main/java/com/mleitejunior/lanchesrestapispring/service/PromotionService.java` gerencia a regra de negócios das promoções, que no momento são 3:
-
-*Light:* Se o lanche tem alface e não tem bacon, ganha 10% de desconto.
-
-*Muita carne:* A cada 3 porções de hambúrguer o cliente só paga 2, a cada 6 porções, o cliente pagará 4 e assim sucessivamente.
-
-*Muito queijo:* A cada 3 porções de queijo o cliente só paga 2, a cada 6 porções, o cliente pagará 4 e assim sucessivamente.
-
-Sempre que ocorrer um INSERT, UPDATE ou DELETE de um `order_item`, o desconto é calculado sobre o preço do `order`.
-
-## Documentação
-
-Acesse a documentação do projeto pelo endereço `http://localhost:9191/swagger-ui/`.
-Se deseja visualizar as requisições em seu Insomnia, importe as configurações através do arquivo [lanches_rest_api.yaml](https://raw.githubusercontent.com/mleitejunior/lanches-rest-api-spring/master/readme_resources/lanches_rest_api.yaml)
+- Attributo `e-mail`: É único, sendo assim não é possível criar nem atualizar um cliente sem E-mail e o mesmo não pode existir préviamente no banco.
 
 ## Melhorias
 
 **Testes:**
-Os testes até o momento foram feitos manualmente, deve-se implementar testes automáticos para verificar as regras de negócios e as relações entre as tabelas.
+Os testes unitários até o momento não estão cobrindo todo o código, está sendo implementado especialmente para os métodos que possuam regras de negócio, necessitando de multiplas validações.
 
-**Implementação de sistema de vendas:**
-É necessário expandir o banco e o sistema tanto para as validações atuais quanto para recursos básicos de uma lanchonete.
-
-**Abstrair sistema de promoções:**
-Apesar estar concentrado em um arquivo apenas, as promoções ainda não são fáceis de serem adicionadas. Pode-se criar uma classe para cada lógica de promoção (no caso temos duas, quantidade e tipo de ingrediente) e chamá-las todas no `PromotionService`, podendo até mesmo ir para o banco de dados com data de expiração da promoção.
+**Implementação do resto de um sistema:**
+Por se tratar de um teste, não há muitas regras e um intuito específico para tal API existir. Seria interessante pensar em um caso real para "fechar o projeto".
 
 **Frontend:**
 Para consumir a API e visualizar o sistema.
 
-**Autenticação AWT:**
-No momento a autenticação está feita por regex (o que é longe do ideal) e as credenciais estão salvas na memória, será criado a entidade `user` para registrar clientes e funcionários e mapeadas as requisições corretas para que se autentique de acordo com as permissões de usuário.
-
-**Montagem automatica do projeto:**
-Sintetizar o banco e as configurações em um Dockerfile para ser montado automaticamente pelo projeto maven.
+**Autorização AWT:**
+As credenciais estão salvas na memória, é interessante criar uma entidade `user` para registrar clientes (ou funcionários) para remover o username e password em código.
 
 ## Autor
 * **Marcelo Leite Junior** - *Information Systems Final-years Student, code owner* - [mleitejunior's Github](https://github.com/mleitejunior) - `mleitejunior@gmail.com`
